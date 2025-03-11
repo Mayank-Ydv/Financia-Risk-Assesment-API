@@ -38,7 +38,6 @@
 ```
     git clone https://github.com/YOUR_GITHUB_USERNAME/financial-risk-api.git
     cd financial-risk-api
-
 ```
 
 ### 2️⃣ Install Dependencies
@@ -56,7 +55,6 @@ Create a .env file in the root directory and add the following:
     REDIS_URL=redis://localhost:6379
     JWT_SECRET=your_secret_key
     RATE_LIMIT_MAX=100
-
 ```
 ### 4️⃣ Start the Server
 For production:
@@ -145,8 +143,7 @@ After 100 requests, the API returns:
 🧪 Running Tests  
 ### 1️⃣ Test Rate Limiting
 
-```
-    npx mocha src/tests/rateLimitTest.js
+```npx mocha src/tests/rateLimitTest.js
 ```
 🛠️ Challenges & Optimizations  
 Challenges Faced  
