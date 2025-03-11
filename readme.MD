@@ -54,32 +54,32 @@ For production:
 npm start
 
 For development with nodemon:
-npm run dev
-📡 API Endpoints
-1️⃣ Authentication
-🔹 POST /api/auth/login
+npm run dev  
+📡 API Endpoints  
+### 1️⃣ Authentication  
+🔹 POST /api/auth/login  
 
 Request:
 
-json
+```json
 { 
   "email": "user@example.com", 
   "password": "yourpassword" 
 }
+```
 Response:
 
-json
-Copy
-Edit
+```json
 { 
   "token": "your_jwt_token_here" 
 }
+```
 ### 2️⃣ Upload Financial Data
 🔹 POST /api/uploadFinancialData
 
 Request:
 
-json
+```json
 
 [
   {
@@ -94,34 +94,37 @@ json
     "cash_flow": 500000
   }
 ]
+```
 Response:
 
-json
-Copy
-Edit
+```json
 {
   "message": "Data enqueued successfully",
   "successCount": 1,
   "failedCount": 0
 }
+```
 ### 3️⃣ Get Risk Assessment
 🔹 GET /api/getRiskAssessment?company_id=C1001&reporting_period=2023-Q4  
 
 Response:  
 
-json{  
-  "currentPage": 1,  
-  "totalPages": 1,  
-  "totalRecords": 1,  
-  "data": [  
-    {  
-      "company_id": "C1001",  
-      "risk_score": 85,  
-      "z_score": 2.8,  
-      "debt_to_equity_ratio": 1.2  
-    }  
-  ]  
-}  
+```json
+{
+  "currentPage": 1,
+  "totalPages": 1,
+  "totalRecords": 1,
+  "data": [
+    {
+      "company_id": "C1001",
+      "risk_score": 85,
+      "z_score": 2.8,
+      "debt_to_equity_ratio": 1.2
+    }
+  ]
+}
+```
+
 ### 4️⃣ Rate Limiting
 After 100 requests, the API returns:  
 
