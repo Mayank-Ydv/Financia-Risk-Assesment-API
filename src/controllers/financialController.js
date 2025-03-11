@@ -77,12 +77,12 @@ exports.getRiskAssessment = async (req, res) => {
 
 
               if (!record.company_id || !record.reporting_period) {
-                  console.warn(`⚠️ Missing company_id or reporting_period for record: ${JSON.stringify(record)}`);
+                  console.warn(`Missing company_id or reporting_period for record: ${JSON.stringify(record)}`);
                   return { ...record, debt_to_equity_ratio: null, risk_score: null };
               }
 
               // Update the record using company_id & reporting_period
-              const updateResult = await FinancialData.updateOne(
+               await FinancialData.updateOne(
                   { company_id: record.company_id, reporting_period: record.reporting_period }, 
                   {
                       $set: {
@@ -95,7 +95,6 @@ exports.getRiskAssessment = async (req, res) => {
                   }
               );
 
-              console.log(`✅ Update Result: ${JSON.stringify(updateResult)}`);
 
               return {
                   ...record,
