@@ -141,9 +141,10 @@ After 100 requests, the API returns:
 } 
 ``` 
 🧪 Running Tests  
-### 1️⃣ Test Rate Limiting
+### 1️⃣ Test All API
 
-```npx mocha src/tests/rateLimitTest.js
+```
+    npx mocha src/tests/apiTests.js --timeout 20000
 ```
 🛠️ Challenges & Optimizations  
 Challenges Faced  
