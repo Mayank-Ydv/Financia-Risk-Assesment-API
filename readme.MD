@@ -148,7 +148,7 @@ After 100 requests, the API returns:
 🧪 Running Tests  
 ### 1️⃣ Test Rate Limiting
 
-```json
+```
 {
     npx mocha src/tests/rateLimitTest.js
 }
