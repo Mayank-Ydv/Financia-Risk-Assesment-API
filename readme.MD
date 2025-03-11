@@ -35,20 +35,31 @@
 
 ### 1️⃣ Clone the Repository  
 
-git clone https://github.com/YOUR_GITHUB_USERNAME/financial-risk-api.git
-cd financial-risk-api
+```json
+{
+    git clone https://github.com/YOUR_GITHUB_USERNAME/financial-risk-api.git
+    cd financial-risk-api
+}
+```
 
 ### 2️⃣ Install Dependencies
-npm install
+```json
+{
+    npm install
+}
+```
 
 ### 3️⃣ Setup Environment Variables
 Create a .env file in the root directory and add the following:
 
-PORT=3000
-MONGO_URI=mongodb://localhost:27017/financial-risk-db
-REDIS_URL=redis://localhost:6379
-JWT_SECRET=your_secret_key
-RATE_LIMIT_MAX=100
+```json
+{
+    PORT=3000
+    MONGO_URI=mongodb://localhost:27017/financial-risk-db
+    REDIS_URL=redis://localhost:6379
+    JWT_SECRET=your_secret_key
+    RATE_LIMIT_MAX=100
+}
 ### 4️⃣ Start the Server
 For production:
 npm start
@@ -128,16 +139,18 @@ Response:
 ### 4️⃣ Rate Limiting
 After 100 requests, the API returns:  
 
-json{  
+```json
+{  
   "message": "Too many requests, please try again later."  
-}  
+} 
+``` 
 🧪 Running Tests  
-1️⃣ Run Unit Tests  
+### 1️⃣ Test Rate Limiting
 
-npm test
-### 2️⃣ Test Rate Limiting
-
-npx mocha src/tests/rateLimitTest.js  
+```json
+{
+    npx mocha src/tests/rateLimitTest.js
+}  
 🛠️ Challenges & Optimizations  
 Challenges Faced  
 🚧 Efficient financial risk calculation  
