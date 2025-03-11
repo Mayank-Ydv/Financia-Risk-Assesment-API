@@ -34,37 +34,26 @@
 ## 🚀 Getting Started  
 
 ### 1️⃣ Clone the Repository  
-```sh
+
 git clone https://github.com/YOUR_GITHUB_USERNAME/financial-risk-api.git
 cd financial-risk-api
-2️⃣ Install Dependencies
-sh
-Copy
-Edit
+
+### 2️⃣ Install Dependencies
 npm install
-3️⃣ Setup Environment Variables
+
+### 3️⃣ Setup Environment Variables
 Create a .env file in the root directory and add the following:
 
-ini
-Copy
-Edit
 PORT=3000
 MONGO_URI=mongodb://localhost:27017/financial-risk-db
 REDIS_URL=redis://localhost:6379
 JWT_SECRET=your_secret_key
 RATE_LIMIT_MAX=100
-4️⃣ Start the Server
+### 4️⃣ Start the Server
 For production:
-
-sh
-Copy
-Edit
 npm start
-For development with nodemon:
 
-sh
-Copy
-Edit
+For development with nodemon:
 npm run dev
 📡 API Endpoints
 1️⃣ Authentication
@@ -73,8 +62,6 @@ npm run dev
 Request:
 
 json
-Copy
-Edit
 { 
   "email": "user@example.com", 
   "password": "yourpassword" 
