@@ -22,7 +22,7 @@ const authenticateUser = (req, res, next) => {
             // Verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = decoded; // Attach user info to request
-            console.log("Token Verified:", decoded);
+            // console.log("Token Verified:", decoded);
             next();
         } catch (error) {
             return res.status(401).json({

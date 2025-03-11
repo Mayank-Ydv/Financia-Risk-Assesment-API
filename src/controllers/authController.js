@@ -28,7 +28,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// 🟢 Login User
+//Login User
 exports.loginUser = async (req, res) => {
     try {
         // Get data from req body
