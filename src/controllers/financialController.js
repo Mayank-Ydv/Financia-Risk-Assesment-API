@@ -40,7 +40,7 @@ exports.getRiskAssessment = async (req, res) => {
 
   const redisClient = getClient();  // Get redis client safely
   if (!redisClient) {
-      console.warn("⚠️ Skipping Redis: Client not available");
+      console.warn("Skipping Redis: Client not available");
   }
 
   const filter = {};
@@ -124,13 +124,6 @@ exports.getRiskAssessment = async (req, res) => {
       res.status(500).json({ message: "Error retrieving data", error: error.message });
   }
 };
-
-
-
-
-  
-
-  
 
 function calculateFinancialMetrics(record) {
   const { total_liabilities, total_assets, revenue, net_profit } = record;
