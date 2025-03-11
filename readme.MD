@@ -115,11 +115,12 @@ Request:
 
 [
   {
-    "company_id": "C1001",
-    "company_name": "TechCorp",
+    "company_id": "C135545",
+    "company_name": "TechCorp Ltd.",
     "reporting_period": "2023-Q4",
     "industry_sector": "Technology",
     "total_assets": 5000000,
+    "interest_coverage_ratio": 1.8,
     "total_liabilities": 2000000,
     "revenue": 1500000,
     "net_profit": 300000,
@@ -143,17 +144,34 @@ Response:
 
 ```json
 {
-  "currentPage": 1,
-  "totalPages": 1,
-  "totalRecords": 1,
-  "data": [
-    {
-      "company_id": "C1001",
-      "risk_score": 85,
-      "z_score": 2.8,
-      "debt_to_equity_ratio": 1.2
-    }
-  ]
+  {
+    "currentPage": 1,
+    "totalPages": 1,
+    "totalRecords": 1,
+    "data": [
+        {
+            "_id": "67d00cd10b33fd603590eebd",
+            "company_id": "C135545",
+            "reporting_period": "2023-Q4",
+            "__v": 0,
+            "cash_flow": 500000,
+            "company_name": "TechCorp Ltd.",
+            "createdAt": "2025-03-11T10:13:37.391Z",
+            "debt_to_equity_ratio": 0.6666666666666666,
+            "industry_sector": "Technology",
+            "interest_coverage_ratio": 1.8,
+            "net_profit": 300000,
+            "operating_margin": 20,
+            "return_on_equity": 10,
+            "revenue": 1500000,
+            "risk_score": 70,
+            "total_assets": 5000000,
+            "total_liabilities": 2000000,
+            "updatedAt": "2025-03-11T11:44:20.343Z",
+            "z_score": 1.398
+        }
+    ]
+}
 }
 ```
 
