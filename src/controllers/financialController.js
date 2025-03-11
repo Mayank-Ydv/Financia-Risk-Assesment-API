@@ -1,7 +1,5 @@
 const FinancialData = require("../models/FinancialData");
-// const {redisClient} = require("../config/redis")
-const { getClient } = require("../config/redis"); // Import the redis client
-// Upload Financial Data
+const { getClient } = require("../config/redis");
 const financialDataQueue = require("../queues/financialQueue");
 
 exports.uploadFinancialData = async (req, res) => {
@@ -19,7 +17,7 @@ exports.uploadFinancialData = async (req, res) => {
       }
     // ✅ Add data to Bull queue (instead of storing it in MongoDB)
     await financialDataQueue.add(financialData, {
-      attempts: 5, // Number of retry attempts
+      attempts: 5,
       backoff: 5000,// Wait 5 seconds before retrying
       removeOnComplete: true,
     });
@@ -30,7 +28,7 @@ exports.uploadFinancialData = async (req, res) => {
       failedCount: 0,
     });
   } catch (error) {
-    console.error("❌ Error in uploadFinancialData:", error);
+    console.error("Error in uploadFinancialData:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -56,7 +54,7 @@ exports.getRiskAssessment = async (req, res) => {
         if (redisClient) {
             const cachedData = await redisClient.get(cacheKey);
             if (cachedData) {
-                console.log("✅ Serving from cache");
+                console.log("Serving from cache");
                 return res.json(JSON.parse(cachedData));
             }
         }
@@ -97,7 +95,7 @@ exports.getRiskAssessment = async (req, res) => {
 
         res.json(response);
     } catch (error) {
-        console.error("❌ Error retrieving data:", error);
+        console.error("Error retrieving data:", error);
         res.status(500).json({ message: "Error retrieving data", error: error.message });
     }
 };
