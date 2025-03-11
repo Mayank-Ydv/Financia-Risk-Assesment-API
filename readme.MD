@@ -187,9 +187,6 @@ Challenges Faced
 **🔹 Add real-time notifications for assessments**  
 **🔹 Build a dashboard for risk insights**  
 
-📜 License  
-This project is MIT Licensed.  
-
 ## ⭐ Contributions  
 **🔹 Feel free to fork, clone & contribute!**  
 **🔹 Open an issue if you find bugs.**  
