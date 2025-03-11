@@ -105,49 +105,46 @@ Edit
   "failedCount": 0
 }
 ### 3️⃣ Get Risk Assessment
-🔹 GET /api/getRiskAssessment?company_id=C1001&reporting_period=2023-Q4
+🔹 GET /api/getRiskAssessment?company_id=C1001&reporting_period=2023-Q4  
 
-Response:
+Response:  
 
-json
-Copy
-Edit
-{
-  "currentPage": 1,
-  "totalPages": 1,
-  "totalRecords": 1,
-  "data": [
-    {
-      "company_id": "C1001",
-      "risk_score": 85,
-      "z_score": 2.8,
-      "debt_to_equity_ratio": 1.2
-    }
-  ]
-}
+json{  
+  "currentPage": 1,  
+  "totalPages": 1,  
+  "totalRecords": 1,  
+  "data": [  
+    {  
+      "company_id": "C1001",  
+      "risk_score": 85,  
+      "z_score": 2.8,  
+      "debt_to_equity_ratio": 1.2  
+    }  
+  ]  
+}  
 ### 4️⃣ Rate Limiting
-After 100 requests, the API returns:
+After 100 requests, the API returns:  
 
-json{
-  "message": "Too many requests, please try again later."
-}
-🧪 Running Tests
-1️⃣ Run Unit Tests
+json{  
+  "message": "Too many requests, please try again later."  
+}  
+🧪 Running Tests  
+1️⃣ Run Unit Tests  
 
 npm test
 ### 2️⃣ Test Rate Limiting
 
-npx mocha src/tests/rateLimitTest.js
-🛠️ Challenges & Optimizations
-Challenges Faced
-🚧 Efficient financial risk calculation
-🚧 Ensuring high throughput API performance
-🚧 Handling large financial datasets
+npx mocha src/tests/rateLimitTest.js  
+🛠️ Challenges & Optimizations  
+Challenges Faced  
+🚧 Efficient financial risk calculation  
+🚧 Ensuring high throughput API performance  
+🚧 Handling large financial datasets  
 
 ## Optimizations Implemented
-**🚀 Bull Queue for async data processing**
-**🚀 Redis Caching for fast data retrieval**
-**🚀 Rate Limiting to prevent spam**
+**🚀 Bull Queue for async data processing**  
+**🚀 Redis Caching for fast data retrieval**  
+**🚀 Rate Limiting to prevent spam**  
 
 ## 🎯 Future Enhancements
 **🔹 Implement AI-based risk prediction**  
