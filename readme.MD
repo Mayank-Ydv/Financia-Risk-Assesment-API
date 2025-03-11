@@ -151,7 +151,8 @@ After 100 requests, the API returns:
 ```json
 {
     npx mocha src/tests/rateLimitTest.js
-}  
+}
+```
 🛠️ Challenges & Optimizations  
 Challenges Faced  
 🚧 Efficient financial risk calculation  
