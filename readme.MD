@@ -60,6 +60,7 @@ Create a .env file in the root directory and add the following:
     JWT_SECRET=your_secret_key
     RATE_LIMIT_MAX=100
 }
+```
 ### 4️⃣ Start the Server
 For production:
 npm start
