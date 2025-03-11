@@ -30,7 +30,31 @@
 - **Testing:** Mocha, Chai  
 
 ---
-
+### 🏗 Project Structure (Folder & Files)
+```
+financial-risk-api/
+│── src/
+│   ├── config/
+│   │   ├── db.js           # MongoDB Connection  
+│   │   ├── redis.js        # Redis Connection  
+│   ├── routes/
+│   │   ├── authRoutes.js   # Authentication Routes  
+│   │   ├── dataRoutes.js   # Financial Data Upload & Assessment Routes  
+│   ├── models/
+│   │   ├── User.js         # User Schema (MongoDB)  
+│   │   ├── FinancialData.js # Financial Data Schema (MongoDB)  
+│   ├── middleware/
+│   │   ├── authMiddleware.js  # JWT Authentication Middleware  
+│   │   ├── rateLimiter.js     # API Rate Limiting Middleware  
+│   ├── queue/
+│   │   ├── riskAssessmentWorker.js # Bull Worker to process risk assessment  
+│   ├── tests/
+│   │   ├── rateLimiterTest.js  # Mocha/Chai Tests for Rate Limiting  
+│   ├── app.js          # Express Server Setup   
+│── .env                # Environment Variables  
+│── package.json        # Dependencies & Scripts  
+│── README.md           # Project Documentation  
+```
 ## 🚀 Getting Started  
 
 ### 1️⃣ Clone the Repository  
