@@ -15,7 +15,7 @@ exports.uploadFinancialData = async (req, res) => {
           .status(400)
           .json({ error: "Batch size exceeds the limit of 500 records." });
       }
-    // ✅ Add data to Bull queue (instead of storing it in MongoDB)
+    // Add data to Bull queue (instead of storing it in MongoDB)
     await financialDataQueue.add(financialData, {
       attempts: 5,
       backoff: 5000,// Wait 5 seconds before retrying
@@ -54,7 +54,7 @@ exports.getRiskAssessment = async (req, res) => {
       if (redisClient) {
           const cachedData = await redisClient.get(cacheKey);
           if (cachedData) {
-              console.log("✅ Serving from cache");
+              console.log("Serving from cache");
               return res.json(JSON.parse(cachedData));
           }
       }
@@ -120,7 +120,7 @@ exports.getRiskAssessment = async (req, res) => {
 
       res.json(response);
   } catch (error) {
-      console.error("❌ Error retrieving data:", error);
+      console.error("Error retrieving data:", error);
       res.status(500).json({ message: "Error retrieving data", error: error.message });
   }
 };

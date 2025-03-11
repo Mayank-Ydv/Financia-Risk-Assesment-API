@@ -19,7 +19,7 @@ financialDataQueue.process(async (job) => {
             console.log(`🚀 Processing Job ${job.id}:`, JSON.stringify(job.data, null, 2));
         }
 
-        console.log(`✅ Job ${job.id} successfully processed`);
+        console.log(`Job ${job.id} successfully processed`);
     } catch (error) {
         console.error("❌ Queue Processing Error:", error);
     }
