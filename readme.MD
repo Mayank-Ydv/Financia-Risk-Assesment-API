@@ -74,14 +74,13 @@ Edit
 { 
   "token": "your_jwt_token_here" 
 }
-2️⃣ Upload Financial Data
+### 2️⃣ Upload Financial Data
 🔹 POST /api/uploadFinancialData
 
 Request:
 
 json
-Copy
-Edit
+
 [
   {
     "company_id": "C1001",
@@ -105,7 +104,7 @@ Edit
   "successCount": 1,
   "failedCount": 0
 }
-3️⃣ Get Risk Assessment
+### 3️⃣ Get Risk Assessment
 🔹 GET /api/getRiskAssessment?company_id=C1001&reporting_period=2023-Q4
 
 Response:
@@ -137,14 +136,10 @@ Edit
 }
 🧪 Running Tests
 1️⃣ Run Unit Tests
-sh
-Copy
-Edit
+
 npm test
-2️⃣ Test Rate Limiting
-sh
-Copy
-Edit
+### 2️⃣ Test Rate Limiting
+
 npx mocha src/tests/rateLimitTest.js
 🛠️ Challenges & Optimizations
 Challenges Faced
