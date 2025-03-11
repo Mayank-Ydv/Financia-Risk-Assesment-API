@@ -36,69 +36,97 @@ exports.uploadFinancialData = async (req, res) => {
 // API to get financial risk assessment data
 
 exports.getRiskAssessment = async (req, res) => {
-    const { company_id, reporting_period, industry_sector, page = 1, limit = 10 } = req.query;
+  const { company_id, reporting_period, industry_sector, page = 1, limit = 10 } = req.query;
 
-    const redisClient = getClient();  // Get redis client safely
-    if (!redisClient) {
-        console.warn("⚠️ Skipping Redis: Client not available");
-    }
+  const redisClient = getClient();  // Get redis client safely
+  if (!redisClient) {
+      console.warn("⚠️ Skipping Redis: Client not available");
+  }
 
-    const filter = {};
-    if (company_id) filter.company_id = company_id;
-    if (reporting_period) filter.reporting_period = reporting_period;
-    if (industry_sector) filter.industry_sector = industry_sector;
+  const filter = {};
+  if (company_id) filter.company_id = company_id;
+  if (reporting_period) filter.reporting_period = reporting_period;
+  if (industry_sector) filter.industry_sector = industry_sector;
 
-    try {
-        const cacheKey = `riskAssessment:${JSON.stringify(filter)}:page=${page}:limit=${limit}`;
+  try {
+      const cacheKey = `riskAssessment:${JSON.stringify(filter)}:page=${page}:limit=${limit}`;
 
-        if (redisClient) {
-            const cachedData = await redisClient.get(cacheKey);
-            if (cachedData) {
-                console.log("Serving from cache");
-                return res.json(JSON.parse(cachedData));
-            }
-        }
+      if (redisClient) {
+          const cachedData = await redisClient.get(cacheKey);
+          if (cachedData) {
+              console.log("✅ Serving from cache");
+              return res.json(JSON.parse(cachedData));
+          }
+      }
 
-        const pageNumber = parseInt(page, 10);
-        const limitNumber = parseInt(limit, 10);
+      const pageNumber = parseInt(page, 10);
+      const limitNumber = parseInt(limit, 10);
 
-        const totalRecords = await FinancialData.countDocuments(filter);
-        const totalPages = Math.ceil(totalRecords / limitNumber);
+      const totalRecords = await FinancialData.countDocuments(filter);
+      const totalPages = Math.ceil(totalRecords / limitNumber);
 
-        const data = await FinancialData.find(filter)
-            .skip((pageNumber - 1) * limitNumber)
-            .limit(limitNumber)
-            .lean();
+      const data = await FinancialData.find(filter)
+          .skip((pageNumber - 1) * limitNumber)
+          .limit(limitNumber)
+          .lean();
 
-        const updatedData = data.map((record) => {
-            const metrics = calculateFinancialMetrics(record);
-            return {
-                ...record,
-                debt_to_equity_ratio: metrics.debtToEquityRatio,
-                operating_margin: metrics.operatingMargin,
-                return_on_equity: metrics.returnOnEquity,
-                z_score: metrics.z_score,
-                risk_score: calculateRiskScore(record),
-            };
-        });
+      const updatedData = await Promise.all(
+          data.map(async (record) => {
+              const metrics = calculateFinancialMetrics(record);
+              const riskScore = calculateRiskScore(record);
 
-        const response = {
-            currentPage: pageNumber,
-            totalPages,
-            totalRecords,
-            data: updatedData,
-        };
 
-        if (redisClient) {
-            await redisClient.setEx(cacheKey, 600, JSON.stringify(response));
-        }
+              if (!record.company_id || !record.reporting_period) {
+                  console.warn(`⚠️ Missing company_id or reporting_period for record: ${JSON.stringify(record)}`);
+                  return { ...record, debt_to_equity_ratio: null, risk_score: null };
+              }
 
-        res.json(response);
-    } catch (error) {
-        console.error("Error retrieving data:", error);
-        res.status(500).json({ message: "Error retrieving data", error: error.message });
-    }
+              // Update the record using company_id & reporting_period
+              const updateResult = await FinancialData.updateOne(
+                  { company_id: record.company_id, reporting_period: record.reporting_period }, 
+                  {
+                      $set: {
+                          debt_to_equity_ratio: metrics.debtToEquityRatio,
+                          operating_margin: metrics.operatingMargin,
+                          return_on_equity: metrics.returnOnEquity,
+                          z_score: metrics.z_score,
+                          risk_score: riskScore,
+                      },
+                  }
+              );
+
+              console.log(`✅ Update Result: ${JSON.stringify(updateResult)}`);
+
+              return {
+                  ...record,
+                  debt_to_equity_ratio: metrics.debtToEquityRatio,
+                  operating_margin: metrics.operatingMargin,
+                  return_on_equity: metrics.returnOnEquity,
+                  z_score: metrics.z_score,
+                  risk_score: riskScore,
+              };
+          })
+      );
+
+      const response = {
+          currentPage: pageNumber,
+          totalPages,
+          totalRecords,
+          data: updatedData,
+      };
+
+      if (redisClient) {
+          await redisClient.setEx(cacheKey, 600, JSON.stringify(response)); // Cache for 10 minutes
+      }
+
+      res.json(response);
+  } catch (error) {
+      console.error("❌ Error retrieving data:", error);
+      res.status(500).json({ message: "Error retrieving data", error: error.message });
+  }
 };
+
+
 
 
   
