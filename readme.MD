@@ -150,15 +150,15 @@ Challenges Faced
 **🚀 Rate Limiting to prevent spam**
 
 ## 🎯 Future Enhancements
-**🔹 Implement AI-based risk prediction**
-**🔹 Add real-time notifications for assessments**
-**🔹 Build a dashboard for risk insights**
+**🔹 Implement AI-based risk prediction**  
+**🔹 Add real-time notifications for assessments**  
+**🔹 Build a dashboard for risk insights**  
 
-📜 License
-This project is MIT Licensed.
+📜 License  
+This project is MIT Licensed.  
 
-## ⭐ Contributions
-**🔹 Feel free to fork, clone & contribute!**
-**🔹 Open an issue if you find bugs.**
+## ⭐ Contributions  
+**🔹 Feel free to fork, clone & contribute!**  
+**🔹 Open an issue if you find bugs.**  
 
 ### 💙 Star this repo if you find it useful! 🚀
