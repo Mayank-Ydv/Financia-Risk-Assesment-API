@@ -125,13 +125,10 @@ Edit
     }
   ]
 }
-4️⃣ Rate Limiting
+### 4️⃣ Rate Limiting
 After 100 requests, the API returns:
 
-json
-Copy
-Edit
-{
+json{
   "message": "Too many requests, please try again later."
 }
 🧪 Running Tests
@@ -147,21 +144,21 @@ Challenges Faced
 🚧 Ensuring high throughput API performance
 🚧 Handling large financial datasets
 
-Optimizations Implemented
-🚀 Bull Queue for async data processing
-🚀 Redis Caching for fast data retrieval
-🚀 Rate Limiting to prevent spam
+## Optimizations Implemented
+**🚀 Bull Queue for async data processing**
+**🚀 Redis Caching for fast data retrieval**
+**🚀 Rate Limiting to prevent spam**
 
-🎯 Future Enhancements
-🔹 Implement AI-based risk prediction
-🔹 Add real-time notifications for assessments
-🔹 Build a dashboard for risk insights
+## 🎯 Future Enhancements
+**🔹 Implement AI-based risk prediction**
+**🔹 Add real-time notifications for assessments**
+**🔹 Build a dashboard for risk insights**
 
 📜 License
 This project is MIT Licensed.
 
-⭐ Contributions
-🔹 Feel free to fork, clone & contribute!
-🔹 Open an issue if you find bugs.
+## ⭐ Contributions
+**🔹 Feel free to fork, clone & contribute!**
+**🔹 Open an issue if you find bugs.**
 
-💙 Star this repo if you find it useful! 🚀
+### 💙 Star this repo if you find it useful! 🚀
