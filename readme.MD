@@ -55,6 +55,7 @@ financial-risk-api/
 │── package.json        # Dependencies & Scripts  
 │── README.md           # Project Documentation  
 ```
+---
 ## 🚀 Getting Started  
 
 ### 1️⃣ Clone the Repository  
