@@ -3,7 +3,7 @@ const helmet = require('helmet'); // Security middleware
 const connectDB = require('./config/db');
 const financialRoutes = require('./routes/financialRoutes');
 const cookieParser = require("cookie-parser");
-const limiter = require("./middleware/ratelimiter");
+
 require('dotenv').config();
 
 const authRoutes = require("./routes/authRoutes");
@@ -34,7 +34,6 @@ app.use(cookieParser());
 
 
 // Routes
-app.post('/api/uploadFinancialData', limiter);
 app.use('/api', financialRoutes);
 app.use("/api/auth", authRoutes);
 
