@@ -11,21 +11,29 @@ exports.uploadFinancialData = async (req, res) => {
         .json({ error: "Invalid data format. Expected an array." });
     }
     if (financialData.length > 500) {
-        return res
-          .status(400)
-          .json({ error: "Batch size exceeds the limit of 500 records." });
-      }
+      return res
+        .status(400)
+        .json({ error: "Batch size exceeds the limit of 500 records." });
+    }
     // Add data to Bull queue (instead of storing it in MongoDB)
-    await financialDataQueue.add(financialData, {
+    const job = await financialDataQueue.add(financialData, {
       attempts: 5,
-      backoff: 5000,// Wait 5 seconds before retrying
+      backoff: 5000, // Wait 5 seconds before retrying
       removeOnComplete: true,
     });
 
+    job
+      .finished()
+      .then((result) => {
+        console.log(
+          `Job completed: ${result.successCount} success, ${result.failedCount} failed`
+        );
+      })
+      .catch((err) => console.error("Error in job completion:", err));
+
     return res.status(200).json({
       message: "Data enqueued successfully",
-      successCount: financialData.length,
-      failedCount: 0,
+      jobId: job.id,
     });
   } catch (error) {
     console.error("Error in uploadFinancialData:", error);
@@ -36,11 +44,17 @@ exports.uploadFinancialData = async (req, res) => {
 // API to get financial risk assessment data
 
 exports.getRiskAssessment = async (req, res) => {
-  const { company_id, reporting_period, industry_sector, page = 1, limit = 10 } = req.query;
+  const {
+    company_id,
+    reporting_period,
+    industry_sector,
+    page = 1,
+    limit = 10,
+  } = req.query;
 
-  const redisClient = getClient();  // Get redis client safely
+  const redisClient = getClient(); // Get redis client safely
   if (!redisClient) {
-      console.warn("Skipping Redis: Client not available");
+    console.warn("Skipping Redis: Client not available");
   }
 
   const filter = {};
@@ -49,79 +63,88 @@ exports.getRiskAssessment = async (req, res) => {
   if (industry_sector) filter.industry_sector = industry_sector;
 
   try {
-      const cacheKey = `riskAssessment:${JSON.stringify(filter)}:page=${page}:limit=${limit}`;
+    const cacheKey = `riskAssessment:${JSON.stringify(
+      filter
+    )}:page=${page}:limit=${limit}`;
 
-      if (redisClient) {
-          const cachedData = await redisClient.get(cacheKey);
-          if (cachedData) {
-              console.log("Serving from cache");
-              return res.json(JSON.parse(cachedData));
+    if (redisClient) {
+      const cachedData = await redisClient.get(cacheKey);
+      if (cachedData) {
+        console.log("Serving from cache");
+        return res.json(JSON.parse(cachedData));
+      }
+    }
+
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+
+    const totalRecords = await FinancialData.countDocuments(filter);
+    const totalPages = Math.ceil(totalRecords / limitNumber);
+
+    const data = await FinancialData.find(filter)
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber)
+      .lean();
+
+    const updatedData = await Promise.all(
+      data.map(async (record) => {
+        const metrics = calculateFinancialMetrics(record);
+        const riskScore = calculateRiskScore(record);
+
+        if (!record.company_id || !record.reporting_period) {
+          console.warn(
+            `Missing company_id or reporting_period for record: ${JSON.stringify(
+              record
+            )}`
+          );
+          return { ...record, debt_to_equity_ratio: null, risk_score: null };
+        }
+
+        // Update the record using company_id & reporting_period
+        await FinancialData.updateOne(
+          {
+            company_id: record.company_id,
+            reporting_period: record.reporting_period,
+          },
+          {
+            $set: {
+              debt_to_equity_ratio: metrics.debtToEquityRatio,
+              operating_margin: metrics.operatingMargin,
+              return_on_equity: metrics.returnOnEquity,
+              z_score: metrics.z_score,
+              risk_score: riskScore,
+            },
           }
-      }
+        );
 
-      const pageNumber = parseInt(page, 10);
-      const limitNumber = parseInt(limit, 10);
+        return {
+          ...record,
+          debt_to_equity_ratio: metrics.debtToEquityRatio,
+          operating_margin: metrics.operatingMargin,
+          return_on_equity: metrics.returnOnEquity,
+          z_score: metrics.z_score,
+          risk_score: riskScore,
+        };
+      })
+    );
 
-      const totalRecords = await FinancialData.countDocuments(filter);
-      const totalPages = Math.ceil(totalRecords / limitNumber);
+    const response = {
+      currentPage: pageNumber,
+      totalPages,
+      totalRecords,
+      data: updatedData,
+    };
 
-      const data = await FinancialData.find(filter)
-          .skip((pageNumber - 1) * limitNumber)
-          .limit(limitNumber)
-          .lean();
+    if (redisClient) {
+      await redisClient.setEx(cacheKey, 600, JSON.stringify(response)); // Cache for 10 minutes
+    }
 
-      const updatedData = await Promise.all(
-          data.map(async (record) => {
-              const metrics = calculateFinancialMetrics(record);
-              const riskScore = calculateRiskScore(record);
-
-
-              if (!record.company_id || !record.reporting_period) {
-                  console.warn(`Missing company_id or reporting_period for record: ${JSON.stringify(record)}`);
-                  return { ...record, debt_to_equity_ratio: null, risk_score: null };
-              }
-
-              // Update the record using company_id & reporting_period
-               await FinancialData.updateOne(
-                  { company_id: record.company_id, reporting_period: record.reporting_period }, 
-                  {
-                      $set: {
-                          debt_to_equity_ratio: metrics.debtToEquityRatio,
-                          operating_margin: metrics.operatingMargin,
-                          return_on_equity: metrics.returnOnEquity,
-                          z_score: metrics.z_score,
-                          risk_score: riskScore,
-                      },
-                  }
-              );
-
-
-              return {
-                  ...record,
-                  debt_to_equity_ratio: metrics.debtToEquityRatio,
-                  operating_margin: metrics.operatingMargin,
-                  return_on_equity: metrics.returnOnEquity,
-                  z_score: metrics.z_score,
-                  risk_score: riskScore,
-              };
-          })
-      );
-
-      const response = {
-          currentPage: pageNumber,
-          totalPages,
-          totalRecords,
-          data: updatedData,
-      };
-
-      if (redisClient) {
-          await redisClient.setEx(cacheKey, 600, JSON.stringify(response)); // Cache for 10 minutes
-      }
-
-      res.json(response);
+    res.json(response);
   } catch (error) {
-      console.error("Error retrieving data:", error);
-      res.status(500).json({ message: "Error retrieving data", error: error.message });
+    console.error("Error retrieving data:", error);
+    res
+      .status(500)
+      .json({ message: "Error retrieving data", error: error.message });
   }
 };
 
